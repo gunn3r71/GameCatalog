@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using GameCatalog.API.Domain.Entities;
+using GameCatalog.API.Domain.Exceptions;
 using GameCatalog.API.Domain.Interfaces.Services;
 using GameCatalog.API.Models;
 using GameCatalog.API.Models.Games.InputModels;
 using GameCatalog.API.Models.Games.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace GameCatalog.API.Controllers.V1
 {
@@ -36,10 +38,13 @@ namespace GameCatalog.API.Controllers.V1
                 
                 return CreatedAtRoute(gameViewModel.Id, gameViewModel);
             }
-            catch (Exception e)
+            catch (GameExistsException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return BadRequest(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
@@ -50,52 +55,56 @@ namespace GameCatalog.API.Controllers.V1
             {
                 if (id != gameInputModel.Id) return BadRequest();
 
-                var gameExists = await _gameService.Exists(id);
-
-                if (!gameExists) return NotFound();
-
                 var game = _mapper.Map<Game>(gameInputModel);
 
                 await _gameService.Update(game);
 
                 return NoContent();
             }
-            catch (Exception e)
+            catch (GameNotExistsException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
         [HttpPatch("{id:guid}/price/{price:double}")]
-        public async Task<IActionResult> PatchPrice(Guid id, double price)
+        public async Task<IActionResult> Patch(Guid id, double price)
         {
             try
             {
-                var gameExists = await _gameService.Exists(id);
-                if (!gameExists) return NotFound();
+                await _gameService.UpdatePrice(id, price);
+
                 return NoContent();
             }
-            catch (Exception e)
+            catch (GameNotExistsException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
         [HttpPatch("{id:guid}/title/{title}")]
-        public async Task<IActionResult> PatchPrice(Guid id, string title)
+        public async Task<IActionResult> Patch(Guid id, string title)
         {
             try
             {
-                var gameExists = await _gameService.Exists(id);
-                if (!gameExists) return NotFound();
+                await _gameService.UpdateTitle(id, title);
                 return NoContent();
             }
-            catch (Exception e)
+            catch (GameNotExistsException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
@@ -104,17 +113,17 @@ namespace GameCatalog.API.Controllers.V1
         {
             try
             {
-                var gameExists = await _gameService.Exists(id);
-                if (!gameExists) return NotFound();
-
                 await _gameService.Delete(id);
 
                 return NoContent();
             }
-            catch (Exception e)
+            catch (GameNotExistsException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
@@ -128,10 +137,9 @@ namespace GameCatalog.API.Controllers.V1
 
                 return Ok(gamesViewModel);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
@@ -141,16 +149,18 @@ namespace GameCatalog.API.Controllers.V1
             try
             {
                 var game = await _gameService.GetById(id);
-                if (game == null) return NotFound();
 
                 var gameViewModel = _mapper.Map<GameViewModel>(game);
 
                 return Ok(gameViewModel);
             }
-            catch (Exception e)
+            catch (GameNotExistsException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
     }
