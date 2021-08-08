@@ -45,7 +45,12 @@ namespace GameCatalog.API
             services.AddScoped<AppDbContext>();
 
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IDeveloperRepository, DeveloperRepository>();
+
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IDeveloperService, DeveloperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

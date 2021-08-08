@@ -5,7 +5,8 @@ using GameCatalog.API.Domain.Entities;
 
 namespace GameCatalog.API.Domain.Interfaces.Repositories
 {
-    public interface IGameRepository : IBaseRepository<Game>
+    public interface IDeveloperRepository : IBaseRepository<Developer>
     {
+        Task<IEnumerable<Game>> GetGamesByDeveloper(Guid id);
     }
 }

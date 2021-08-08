@@ -95,6 +95,16 @@ namespace GameCatalog.API.Domain.Services
             }
         }
 
+        public async Task<IEnumerable<Game>> GetGamesByCategory(Guid categoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Game>> GetGamesByDeveloper(Guid developerId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task Delete(Guid id)
         {
             try

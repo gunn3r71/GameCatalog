@@ -115,6 +115,25 @@ namespace GameCatalog.API.Controllers.V1
             return Ok(gamesViewModel);
         }
 
+
+        [HttpGet("developer/{id:guid}")]
+        public async Task<IActionResult> GetByDeveloper(Guid id)
+        {
+            var games = new List<Game>();
+            var gamesViewModel = _mapper.Map<IEnumerable<GameViewModel>>(games);
+
+            return Ok(gamesViewModel);
+        }
+
+        [HttpGet("category/{id:guid}")]
+        public async Task<IActionResult> GetByCategory(Guid id)
+        {
+            var games = new List<Game>();
+            var gamesViewModel = _mapper.Map<IEnumerable<GameViewModel>>(games);
+
+            return Ok(gamesViewModel);
+        }
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {

@@ -5,7 +5,8 @@ using GameCatalog.API.Domain.Entities;
 
 namespace GameCatalog.API.Domain.Interfaces.Repositories
 {
-    public interface IGameRepository : IBaseRepository<Game>
+    public interface ICategoryRepository : IBaseRepository<Category>
     {
+        Task<IEnumerable<Game>> GetGamesByCategory(Guid id);
     }
 }
