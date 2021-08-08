@@ -9,7 +9,6 @@ using GameCatalog.API.Domain.Interfaces.Services;
 using GameCatalog.API.Models;
 using GameCatalog.API.Models.Games.InputModels;
 using GameCatalog.API.Models.Games.ViewModels;
-using Microsoft.AspNetCore.Http;
 
 namespace GameCatalog.API.Controllers.V1
 {
@@ -42,10 +41,6 @@ namespace GameCatalog.API.Controllers.V1
             {
                 return BadRequest(e.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
-            }
         }
 
         [HttpPut("{id:guid}")]
@@ -65,10 +60,6 @@ namespace GameCatalog.API.Controllers.V1
             {
                 return NotFound(e.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
-            }
         }
 
         [HttpPatch("{id:guid}/price/{price:double}")]
@@ -84,10 +75,6 @@ namespace GameCatalog.API.Controllers.V1
             {
                 return NotFound(e.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
-            }
         }
 
         [HttpPatch("{id:guid}/title/{title}")]
@@ -101,10 +88,6 @@ namespace GameCatalog.API.Controllers.V1
             catch (GameNotExistsException e)
             {
                 return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
 
@@ -121,26 +104,15 @@ namespace GameCatalog.API.Controllers.V1
             {
                 return NotFound(e.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
-            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PaginationInputModel pg)
         {
-            try
-            {
-                var games = await _gameService.Get(pg.Page, pg.Amount);
-                var gamesViewModel = _mapper.Map<IEnumerable<GameViewModel>>(games);
+            var games = await _gameService.Get(pg.Page, pg.Amount);
+            var gamesViewModel = _mapper.Map<IEnumerable<GameViewModel>>(games);
 
-                return Ok(gamesViewModel);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
-            }
+            return Ok(gamesViewModel);
         }
 
         [HttpGet("{id:guid}")]
@@ -157,10 +129,6 @@ namespace GameCatalog.API.Controllers.V1
             catch (GameNotExistsException e)
             {
                 return NotFound(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unfortunately we were unable to process the request.");
             }
         }
     }

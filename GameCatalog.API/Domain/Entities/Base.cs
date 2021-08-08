@@ -4,7 +4,7 @@ namespace GameCatalog.API.Domain.Entities
 {
     public abstract class Base
     {
-        public Base()
+        protected Base()
         {
             Id = Guid.NewGuid();
             Status = true;

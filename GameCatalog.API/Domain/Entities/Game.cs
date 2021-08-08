@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GameCatalog.API.Domain.Entities
+﻿namespace GameCatalog.API.Domain.Entities
 {
     public class Game : Base
     {

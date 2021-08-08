@@ -12,18 +12,19 @@ namespace GameCatalog.API.Data.Repositories
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : Base, new()
     {
         protected readonly AppDbContext Context;
-        private DbSet<T> Entity { get; set; }
+        private DbSet<T> _entity;
 
         protected BaseRepository(AppDbContext context)
         {
             Context = context;
+            _entity = context.Set<T>();
         }
 
-        public async Task Add(T entity)
+        public virtual async Task Add(T entity)
         {
             try
             {
-                Entity.Add(entity);
+                _entity.Add(entity);
                 await SaveChanges();
             }
             catch (Exception e)
@@ -33,11 +34,11 @@ namespace GameCatalog.API.Data.Repositories
             }
         }
 
-        public async Task Update(T entity)
+        public virtual async Task Update(T entity)
         {
             try
             {
-                Entity.Update(entity);
+                _entity.Update(entity);
                 await SaveChanges();
             }
             catch (Exception e)
@@ -48,13 +49,11 @@ namespace GameCatalog.API.Data.Repositories
         }
 
 
-        public async Task Delete(Guid id)
+        public virtual async Task Delete(Guid id)
         {
             try
             {
-                var entity = await Entity.FindAsync(id);
-                Entity.Remove(entity);
-
+                _entity.Remove(new T{Id = id});
                 await SaveChanges();
             }
             catch (Exception e)
@@ -64,16 +63,16 @@ namespace GameCatalog.API.Data.Repositories
             }
         }
 
-        public async Task<IList<T>> Get(int page, int amount)
+        public virtual async Task<IList<T>> Get(int page, int amount)
         {
-            return await Entity.AsNoTracking().Skip((page - 1) * amount).Take(amount).ToListAsync();
+            return await _entity.AsNoTracking().Skip((page - 1) * amount).Take(amount).ToListAsync();
         }
 
-        public async Task<T> GetById(Guid id)
+        public virtual async Task<T> GetById(Guid id)
         {
             try
             {
-                var entity = await Entity.FindAsync(id);
+                var entity = await _entity.FindAsync(id);
                 
                 if (entity == null)
                     return null;
@@ -91,7 +90,7 @@ namespace GameCatalog.API.Data.Repositories
         {
             try
             {
-                return Entity.AsNoTracking().FirstOrDefault(filter) != null;
+                return _entity.AsNoTracking().FirstOrDefault(filter) != null;
             }
             catch (Exception e)
             {
