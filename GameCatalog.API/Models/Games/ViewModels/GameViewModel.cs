@@ -1,4 +1,6 @@
 ﻿using System;
+using GameCatalog.API.Models.Categories.ViewModels;
+using GameCatalog.API.Models.Developers.ViewModels;
 
 namespace GameCatalog.API.Models.Games.ViewModels
 {
@@ -6,7 +8,7 @@ namespace GameCatalog.API.Models.Games.ViewModels
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public string Developer { get; set; }
         public double Price { get; set; }
+        public CategoryViewModel Category { get; set; }
     }
 }
