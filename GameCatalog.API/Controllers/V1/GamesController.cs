@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using GameCatalog.API.Domain.Entities;
 using GameCatalog.API.Domain.Exceptions;
+using GameCatalog.API.Domain.Exceptions.Games;
 using GameCatalog.API.Domain.Interfaces.Services;
 using GameCatalog.API.Models;
 using GameCatalog.API.Models.Games.InputModels;
@@ -35,7 +36,7 @@ namespace GameCatalog.API.Controllers.V1
 
                 var gameViewModel = _mapper.Map<GameViewModel>(game);
                 
-                return CreatedAtRoute(gameViewModel.Id, gameViewModel);
+                return CreatedAtRoute(nameof(Get), gameViewModel);
             }
             catch (GameExistsException e)
             {

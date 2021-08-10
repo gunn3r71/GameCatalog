@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameCatalog.API.Domain.Entities;
 using GameCatalog.API.Domain.Exceptions;
+using GameCatalog.API.Domain.Exceptions.Games;
 using GameCatalog.API.Domain.Interfaces.Repositories;
 using GameCatalog.API.Domain.Interfaces.Services;
 

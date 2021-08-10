@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameCatalog.API.Domain.Exceptions
+namespace GameCatalog.API.Domain.Exceptions.Games
 {
     public class GameNotExistsException : Exception
     {
